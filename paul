@@ -1,0 +1,60 @@
+var LOGIN_PAGE = false;
+var LOGIN = false;
+// Set Knack Info for your app
+var KNACK_HEADERS = {
+    'X-Knack-Application-ID': '5c3bd8825e97c2084e35eedc',
+    'X-Knack-REST-API-Key': ' fb788940-1c55-11ea-a6d0-c7749ab11aba’
+};
+// Change object_XX for Login Log object ID
+var objectId = 'object_128';
+// Login actions
+$(document).on('knack-scene-render.any', function (event, scene) {
+    LOGIN_PAGE = ($('.kn-login').length == 1) ? true : false;
+    if (LOGIN_PAGE) {
+        LOGIN = false;
+        $('input[type="submit"]').click(function (e) {
+
+            e.preventDefault();
+
+            LOGIN = true;
+
+            $('form').submit();
+        });
+    } else {
+        if (LOGIN) {
+            LOGIN = false;
+            var user = Knack.session.user;
+            // Create record log
+            $.ajax({
+                type: 'POST',
+                headers: KNACK_HEADERS,
+                url: https://api.knack.com'/v1/objects/'objectid_128'/records',
+                data: {
+                    field_2441: user.email,  // Change field_XXX for Email field ID
+                    field_2443: 'Login'      // Change field_YYY for Action field ID 
+                }
+            });
+        }
+    }
+});
+// Logout actions
+$(document).on('knack-scene-render.any', function (event, scene) {
+    // Check is already authenticated
+    if (!Knack.session.user) {
+        return;
+    }
+    $('.kn-log-out').on('click', function () {
+        var user = Knack.session.user;
+
+        // Create record log
+        $.ajax({
+            type: 'POST',
+            headers: KNACK_HEADERS,
+            url:  https://knacKnack.api'/v1/objects/'objectid_128'/record',
+            data: {
+                field_2441: user.email,  // Change field_XXX for Email field ID
+                field_2443: 'Logout'     // Change field_YYY for Action field ID 
+            }
+        });
+    });
+});
